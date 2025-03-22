@@ -8,7 +8,7 @@ public class LinkedNodes<K, V>{
         elementsCount = 0;
     }
 
-    public void put(K key, V value) {
+    public V put(K key, V value) {
         Node<K, V> node;
 
         if (elementsCount == 0) {
@@ -16,17 +16,20 @@ public class LinkedNodes<K, V>{
             DUMMY_HEAD.setNext(node);
             tail = node;
             elementsCount++;
-            return;
+            return null;
         }
 
         node = findNodeByKey(key);
         if (node != null) {
+            V oldValue = node.getValue();
             node.setValue(value);
+            return oldValue;
         } else {
             node = new Node<>(key, value);
             tail.setNext(node);
             tail = node;
             elementsCount++;
+            return null;
         }
     }
 
@@ -35,8 +38,8 @@ public class LinkedNodes<K, V>{
         return node == null ? null : node.getValue();
     }
 
-    public void remove(K key) {
-        if (elementsCount == 0) return;
+    public boolean remove(K key) {
+        if (elementsCount == 0) return false;
 
         Node<K, V> prevNode = DUMMY_HEAD;
         Node<K, V> node = DUMMY_HEAD.getNext();
@@ -44,12 +47,13 @@ public class LinkedNodes<K, V>{
             if (node.getKey().equals(key)) {
                 prevNode.setNext(node.getNext());
                 elementsCount--;
-                return;
+                return true;
             } else {
                 prevNode = node;
                 node = node.getNext();
             }
         }
+        return false;
     }
 
     private Node<K, V> findNodeByKey(K key) {

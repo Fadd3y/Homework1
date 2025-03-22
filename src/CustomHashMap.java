@@ -14,8 +14,10 @@ public class CustomHashMap<K, V> {
         if (key == null) return;
 
         int bucketIndex = calculateIndex(key);
-        BUCKETS[bucketIndex].put(key, value);
-        elementsCount++;
+
+        if(BUCKETS[bucketIndex].put(key, value) == null) {
+            elementsCount++;
+        }
     }
 
     public V get(K key) {
@@ -29,8 +31,10 @@ public class CustomHashMap<K, V> {
         if (key == null) return;
 
         int bucketIndex = calculateIndex(key);
-        BUCKETS[bucketIndex].remove(key);
-        elementsCount--;
+
+        if (BUCKETS[bucketIndex].remove(key)) {
+            elementsCount--;
+        }
     }
 
     public CustomArrayList<V> values() {
