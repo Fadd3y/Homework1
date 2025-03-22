@@ -34,6 +34,12 @@ public class CustomArrayList <T> {
         elementsCount++;
     }
 
+    public void addAll(CustomArrayList<T> list) {
+        for (int i = 0; i < list.size(); i++) {
+            this.add(list.get(i));
+        }
+    }
+
     @SuppressWarnings("unchecked")
     public T get(int index) {
         checkIndexInBounds(index);

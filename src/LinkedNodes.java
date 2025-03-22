@@ -53,16 +53,34 @@ public class LinkedNodes<K, V>{
     }
 
     private Node<K, V> findNodeByKey(K key) {
-        int index = 0;
         Node<K, V> node = DUMMY_HEAD.getNext();
         while (node != null) {
             if (node.getKey().equals(key)) {
                 return node;
             }
             node = node.getNext();
-            index++;
         }
         return null;
+    }
+
+    public CustomArrayList<V> values() {
+        CustomArrayList<V> values = new CustomArrayList<>();
+        Node<K, V> node = DUMMY_HEAD.getNext();
+        while (node != null) {
+            values.add(node.getValue());
+            node = node.getNext();
+        }
+        return values;
+    }
+
+    public CustomArrayList<K> keys() {
+        CustomArrayList<K> values = new CustomArrayList<>();
+        Node<K, V> node = DUMMY_HEAD.getNext();
+        while (node != null) {
+            values.add(node.getKey());
+            node = node.getNext();
+        }
+        return values;
     }
 
     @Override

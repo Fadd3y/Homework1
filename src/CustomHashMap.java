@@ -33,6 +33,22 @@ public class CustomHashMap<K, V> {
         elementsCount--;
     }
 
+    public CustomArrayList<V> values() {
+        CustomArrayList<V> values = new CustomArrayList<>();
+        for (int i = 0; i < BUCKET_AMOUNT; i++) {
+            values.addAll(BUCKETS[i].values());
+        }
+        return values;
+    }
+
+    public CustomArrayList<K> keys() {
+        CustomArrayList<K> values = new CustomArrayList<>();
+        for (int i = 0; i < BUCKET_AMOUNT; i++) {
+            values.addAll(BUCKETS[i].keys());
+        }
+        return values;
+    }
+
     public int size() {
         return elementsCount;
     }
