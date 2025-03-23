@@ -47,6 +47,10 @@ public class LinkedNodes<K, V>{
             if (node.getKey().equals(key)) {
                 prevNode.setNext(node.getNext());
                 elementsCount--;
+
+                if(node == tail) {
+                    tail = prevNode == DUMMY_HEAD ? null : node;
+                }
                 return true;
             } else {
                 prevNode = node;
@@ -106,7 +110,7 @@ public class LinkedNodes<K, V>{
     private static class Node<K, V> {
         private K key;
         private V value;
-        private Node next;
+        private Node<K, V> next;
 
         public Node() {
         }
@@ -116,11 +120,11 @@ public class LinkedNodes<K, V>{
             this.value = value;
         }
 
-        public void setNext(Node next) {
+        public void setNext(Node<K, V> next) {
             this.next = next;
         }
 
-        public Node getNext() {
+        public Node<K, V> getNext() {
             return next;
         }
 
