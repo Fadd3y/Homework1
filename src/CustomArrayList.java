@@ -63,7 +63,9 @@ public class CustomArrayList <T> {
     @SuppressWarnings("unchecked")
     public boolean contains(T object) {
         for (int i = 0; i < elementsCount; i++) {
-            if (object.equals((T) storage[i])) {
+            if (object == null && storage[i] == null) {
+                return true;
+            } else if (object != null && object.equals((T) storage[i])) {
                 return true;
             }
         }
@@ -73,7 +75,9 @@ public class CustomArrayList <T> {
     @SuppressWarnings("unchecked")
     public int indexOf(T object) {
         for (int i = 0; i < elementsCount; i++) {
-            if (object.equals((T) storage[i])) {
+            if (object == null && storage[i] == null) {
+                return i;
+            } else if (object != null && object.equals((T) storage[i])) {
                 return i;
             }
         }
@@ -120,9 +124,13 @@ public class CustomArrayList <T> {
         var stringBuilder = new StringBuilder();
         stringBuilder.append("[");
         for (int i = 0; i < elementsCount; i++) {
-            stringBuilder
-                    .append(storage[i].toString())
-                    .append(", ");
+            if (storage[i] != null) {
+                stringBuilder
+                        .append(storage[i].toString());
+            } else {
+                stringBuilder.append("null");
+            }
+            stringBuilder.append(", ");
         }
         if (this.size() > 0) {
             stringBuilder.delete(stringBuilder.lastIndexOf(", "), stringBuilder.length());
