@@ -1,58 +1,74 @@
 public class LinkedNodes<K, V> {
-    private final Node<K, V> DUMMY_HEAD;
-    private Node<K, V> tail;
+    private Node<K, V> head;
     private int elementsCount;
 
     public LinkedNodes() {
-        DUMMY_HEAD = new Node<>();
         elementsCount = 0;
     }
 
     public V put(K key, V value) {
-        Node<K, V> node;
+        if (key == null) throw new NullPointerException();
+
+        Node<K, V> prevNode = head;
+        Node<K, V> node = head;
+        int hash = key.hashCode();
 
         if (elementsCount == 0) {
-            node = new Node<>(key, value);
-            DUMMY_HEAD.setNext(node);
-            tail = node;
+            head = new Node<>(key, value);
             elementsCount++;
             return null;
         }
 
-        node = findNodeByKey(key);
-        if (node != null) {
-            V oldValue = node.getValue();
-            node.setValue(value);
-            return oldValue;
-        } else {
-            node = new Node<>(key, value);
-            tail.setNext(node);
-            tail = node;
-            elementsCount++;
-            return null;
+        while(node != null) {
+            if (hash == node.getHash() && node.getKey().equals(key)) {
+                V oldValue = node.getValue();
+                node.setValue(value);
+                return oldValue;
+            }
+            prevNode = node;
+            node = node.getNext();
         }
+
+        prevNode.setNext(new Node<>(key, value));
+        elementsCount++;
+        return null;
     }
 
     public V get(K key) {
-        Node<K, V> node = findNodeByKey(key);
-        return node == null ? null : node.getValue();
-    }
+        if (key == null) throw new NullPointerException();
 
-    public boolean remove(K key) {
-        if (elementsCount == 0) return false;
-
-        Node<K, V> prevNode = DUMMY_HEAD;
-        Node<K, V> node = DUMMY_HEAD.getNext();
+        Node<K, V> node = head;
         int hash = key.hashCode();
 
         while (node != null) {
             if (hash == node.getHash() && node.getKey().equals(key)) {
+                return node.getValue();
+            } else {
+                node = node.getNext();
+            }
+        }
+        return null;
+    }
+
+    public boolean remove(K key) {
+        if (key == null) throw new NullPointerException();
+
+        if (elementsCount == 0) return false;
+
+        Node<K, V> prevNode = head;
+        Node<K, V> node = head;
+        int hash = key.hashCode();
+
+        while (node != null) {
+            if (hash == node.getHash() && node.getKey().equals(key)) {
+                if (node.equals(head)) {
+                    head = node.getNext();
+                    elementsCount--;
+                    return true;
+                }
+
                 prevNode.setNext(node.getNext());
                 elementsCount--;
-
-                if (node == tail) {
-                    tail = prevNode == DUMMY_HEAD ? null : node;
-                }
                 return true;
             } else {
                 prevNode = node;
@@ -62,21 +78,9 @@ public class LinkedNodes<K, V> {
         return false;
     }
 
-    private Node<K, V> findNodeByKey(K key) {
-        int hash = key.hashCode();
-        Node<K, V> node = DUMMY_HEAD.getNext();
-        while (node != null) {
-            if (hash == node.getHash() && node.getKey().equals(key)) {
-                return node;
-            }
-            node = node.getNext();
-        }
-        return null;
-    }
-
     public CustomArrayList<V> values() {
         CustomArrayList<V> values = new CustomArrayList<>();
-        Node<K, V> node = DUMMY_HEAD.getNext();
+        Node<K, V> node = head;
         while (node != null) {
             values.add(node.getValue());
             node = node.getNext();
@@ -86,7 +90,7 @@ public class LinkedNodes<K, V> {
 
     public CustomArrayList<K> keys() {
         CustomArrayList<K> values = new CustomArrayList<>();
-        Node<K, V> node = DUMMY_HEAD.getNext();
+        Node<K, V> node = head;
         while (node != null) {
             values.add(node.getKey());
             node = node.getNext();
@@ -98,7 +102,7 @@ public class LinkedNodes<K, V> {
     public String toString() {
         int index = 0;
         StringBuilder builder = new StringBuilder();
-        Node<K, V> node = DUMMY_HEAD.getNext();
+        Node<K, V> node = head;
         while (node != null) {
             builder.append(index)
                     .append(": ")
