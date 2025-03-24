@@ -61,10 +61,13 @@ public class LinkedNodes<K, V>{
     }
 
     private Node<K, V> findNodeByKey(K key) {
+        int hash = key.hashCode();
         Node<K, V> node = DUMMY_HEAD.getNext();
         while (node != null) {
-            if (node.getKey().equals(key)) {
-                return node;
+            if (hash == node.getHash()) {
+                if (node.getKey().equals(key)) {
+                    return node;
+                }
             }
             node = node.getNext();
         }
@@ -108,16 +111,20 @@ public class LinkedNodes<K, V>{
     }
 
     private static class Node<K, V> {
-        private K key;
+        private final K key;
         private V value;
         private Node<K, V> next;
+        private final int hash;
 
         public Node() {
+            this.key = null;
+            this.hash = 0;
         }
 
         public Node(K key, V value) {
             this.key = key;
             this.value = value;
+            this.hash = key.hashCode();
         }
 
         public void setNext(Node<K, V> next) {
@@ -138,6 +145,10 @@ public class LinkedNodes<K, V>{
 
         public void setValue(V value) {
             this.value = value;
+        }
+
+        public int getHash() {
+            return hash;
         }
 
         @Override
