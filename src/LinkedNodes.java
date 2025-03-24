@@ -1,4 +1,4 @@
-public class LinkedNodes<K, V>{
+public class LinkedNodes<K, V> {
     private final Node<K, V> DUMMY_HEAD;
     private Node<K, V> tail;
     private int elementsCount;
@@ -43,12 +43,14 @@ public class LinkedNodes<K, V>{
 
         Node<K, V> prevNode = DUMMY_HEAD;
         Node<K, V> node = DUMMY_HEAD.getNext();
-        while(node != null) {
-            if (node.getKey().equals(key)) {
+        int hash = key.hashCode();
+
+        while (node != null) {
+            if (hash == node.getHash() && node.getKey().equals(key)) {
                 prevNode.setNext(node.getNext());
                 elementsCount--;
 
-                if(node == tail) {
+                if (node == tail) {
                     tail = prevNode == DUMMY_HEAD ? null : node;
                 }
                 return true;
@@ -64,10 +66,8 @@ public class LinkedNodes<K, V>{
         int hash = key.hashCode();
         Node<K, V> node = DUMMY_HEAD.getNext();
         while (node != null) {
-            if (hash == node.getHash()) {
-                if (node.getKey().equals(key)) {
-                    return node;
-                }
+            if (hash == node.getHash() && node.getKey().equals(key)) {
+                return node;
             }
             node = node.getNext();
         }
