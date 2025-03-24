@@ -9,11 +9,10 @@ public class LinkedNodes<K, V> {
     public V put(K key, V value) {
         if (key == null) throw new NullPointerException();
 
-        Node<K, V> prevNode = head;
         Node<K, V> node = head;
         int hash = key.hashCode();
 
-        if (elementsCount == 0) {
+        if (head == null) {
             head = new Node<>(key, value);
             elementsCount++;
             return null;
@@ -25,11 +24,10 @@ public class LinkedNodes<K, V> {
                 node.setValue(value);
                 return oldValue;
             }
-            prevNode = node;
             node = node.getNext();
         }
 
-        prevNode.setNext(new Node<>(key, value));
+        insertFirst(new Node<>(key, value));
         elementsCount++;
         return null;
     }
@@ -61,7 +59,7 @@ public class LinkedNodes<K, V> {
 
         while (node != null) {
             if (hash == node.getHash() && node.getKey().equals(key)) {
-                if (node.equals(head)) {
+                if (node == head) {
                     head = node.getNext();
                     elementsCount--;
                     return true;
@@ -89,13 +87,19 @@ public class LinkedNodes<K, V> {
     }
 
     public CustomArrayList<K> keys() {
-        CustomArrayList<K> values = new CustomArrayList<>();
+        CustomArrayList<K> keys = new CustomArrayList<>();
         Node<K, V> node = head;
         while (node != null) {
-            values.add(node.getKey());
+            keys.add(node.getKey());
             node = node.getNext();
         }
-        return values;
+        return keys;
+    }
+
+    private void insertFirst(Node<K, V> node) {
+        var temp = head;
+        head = node;
+        head.setNext(temp);
     }
 
     @Override
@@ -157,7 +161,7 @@ public class LinkedNodes<K, V> {
 
         @Override
         public String toString() {
-            return key.toString() + " - " + value.toString();
+            return key.toString() + " - " + (value == null ? "null" : value.toString());
         }
     }
 }
